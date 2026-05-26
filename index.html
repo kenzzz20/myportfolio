@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Kenneth Malinao | Front-end Developer & UI Designer</title>
+    <meta name="description" content="Kenneth Malinao — Front-end Developer & UI Designer crafting performant, pixel-perfect digital experiences.">
+    <meta name="author" content="Kenneth Malinao">
+    <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'navy': '#0b0f43',
+                        'navy-dark': '#070a2e',
+                        'yellow': '#f8e71c',
+                        'blue-strip': '#31379b',
+                        'text-muted': '#5a5a6e',
+                        'gray-light': '#f8f9fc',
+                    },
+                    fontFamily: {
+                        'marker': ['Permanent Marker', 'cursive'],
+                        'grotesk': ['Space Grotesk', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        html { scroll-behavior: smooth; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #e9eef3; }
+        ::-webkit-scrollbar-thumb { background: #0b0f43; border-radius: 10px; }
+        body { font-family: 'Space Grotesk', sans-serif; overflow-x: hidden; }
+
+        /* ── Hero clip ── */
+        .hero-clip { clip-path: polygon(12% 0%, 100% 0%, 100% 100%, 0% 100%); }
+        @media (max-width: 1023px) { .hero-clip { clip-path: none; } }
+
+        /* ── Nav underline ── */
+        .nav-underline { position: relative; }
+        .nav-underline::after {
+            content: ''; position: absolute; bottom: -6px; left: 0;
+            width: 0; height: 2px; background: #f8e71c;
+            transition: width 0.25s ease;
+        }
+        .nav-underline:hover::after { width: 100%; }
+
+        /* ── Hamburger ── */
+        .hamburger-bar { display: block; width: 22px; height: 2px; background: white; border-radius: 2px; transition: all 0.3s ease; }
+        .hamburger-bar:nth-child(2) { margin: 5px 0; }
+        #mobile-nav.open .hamburger-bar:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+        #mobile-nav.open .hamburger-bar:nth-child(2) { opacity: 0; }
+        #mobile-nav.open .hamburger-bar:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+        /* ── Background decorators ── */
+        .bg-decor {
+            position: absolute; top: 3rem; font-size: clamp(4rem, 10vw, 9rem);
+            font-weight: 800; color: rgba(11,15,67,0.025);
+            letter-spacing: 0.15em; user-select: none; pointer-events: none; white-space: nowrap;
+        }
+        .bg-decor-right { right: -1rem; }
+        .bg-decor-left  { left: -1rem; }
+
+        /* ══════════════════════════════════
+           MARQUEE / SKILLS STRIP
+        ══════════════════════════════════ */
+        .marquee-wrapper {
+            overflow: hidden;
+            mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+        }
+        .marquee-track {
+            display: flex;
+            gap: 14px;
+            width: max-content;
+            animation: marquee-scroll 30s linear infinite;
+        }
+        .marquee-track:hover { animation-play-state: paused; }
+        @keyframes marquee-scroll {
+            0%   { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* ── Skill Chip ── */
+        .skill-chip {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 9px 20px;
+            border: 2px solid #0b0f43;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #0b0f43;
+            background: white;
+            cursor: default;
+            white-space: nowrap;
+            overflow: hidden;
+            min-width: 110px;
+            transition: background 0.28s ease, color 0.28s ease, border-color 0.28s ease, transform 0.22s ease, box-shadow 0.22s ease;
+        }
+        .skill-chip:hover {
+            background: #0b0f43;
+            color: #f8e71c;
+            border-color: #0b0f43;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(11,15,67,0.18);
+        }
+        .chip-text {
+            transition: opacity 0.22s ease, transform 0.22s ease;
+            position: relative;
+        }
+        .chip-icon {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transform: scale(0.7) rotate(-10deg);
+            transition: opacity 0.22s ease, transform 0.22s ease;
+        }
+        .chip-icon svg { width: 26px; height: 26px; }
+        .skill-chip:hover .chip-text {
+            opacity: 0;
+            transform: scale(0.6);
+        }
+        .skill-chip:hover .chip-icon {
+            opacity: 1;
+            transform: scale(1) rotate(0deg);
+        }
+
+        /* Card shadows */
+        .shadow-card { box-shadow: 0 8px 30px rgba(0,0,0,0.05); }
+        .shadow-card-hover { box-shadow: 0 20px 35px -12px rgba(11,15,67,0.14); }
+
+        /* Hero float animation */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50%       { transform: translateY(-10px); }
+        }
+        .animate-float { animation: float 6s ease-in-out infinite; }
+
+        /* Mobile menu overlay */
+        #mobile-menu {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(7,10,46,0.97);
+            z-index: 999;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2rem;
+        }
+        #mobile-menu.active { display: flex; }
+        #mobile-menu a {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: white;
+            transition: color 0.2s;
+        }
+        #mobile-menu a:hover { color: #f8e71c; }
+
+        /* Responsive hero text */
+        @media (max-width: 480px) {
+            .hero-name { font-size: 2.2rem !important; }
+        }
+
+        /* Stats hover */
+        .stat-card {
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+        .stat-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 40px rgba(11,15,67,0.25);
+        }
+
+        /* Portfolio card */
+        .port-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .port-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 35px -12px rgba(11,15,67,0.14);
+        }
+        .port-card .card-img {
+            transition: transform 0.5s ease;
+        }
+        .port-card:hover .card-img {
+            transform: scale(1.06);
+        }
+    </style>
+</head>
+<body class="bg-white text-black font-grotesk antialiased">
+
+<!-- ══ Mobile Menu Overlay ══ -->
+<div id="mobile-menu">
+    <button id="close-menu" style="position:absolute;top:1.5rem;right:1.5rem;color:white;font-size:2rem;background:none;border:none;cursor:pointer;">✕</button>
+    <a href="#about"     onclick="closeMobileMenu()">About Me</a>
+    <a href="#portfolio" onclick="closeMobileMenu()">Portfolio</a>
+    <a href="#contact"   onclick="closeMobileMenu()" style="background:#f8e71c;color:#000;padding:12px 32px;border-radius:9999px;font-size:1rem;">Contact Me</a>
+</div>
+
+<!-- ══ Fixed Header ══ -->
+<header id="main-header" class="fixed top-0 left-0 w-full z-[1000] flex items-center justify-between px-5 md:px-14 lg:px-20 py-4 transition-all duration-300 bg-transparent">
+    <a href="#" aria-label="Home">
+        <svg class="w-10 h-10 md:w-12 md:h-12" viewBox="0 0 2293 2356" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect y="570" width="178" height="1521" fill="#F7DF1E"/>
+            <rect x="1286" y="975" width="178" height="805" fill="#F7DF1E"/>
+            <rect x="2072" y="976" width="178" height="1115" fill="#F7DF1E"/>
+            <path d="M2047.5 976L2250 976L1893 1781.37L1699 1781.37L2047.5 976Z" fill="#F7DF1E"/>
+            <path d="M1286 975.099L1488.96 975.098L1890 1781.37L1699 1781.37L1286 975.099Z" fill="#F7DF1E"/>
+            <path d="M494 392C521.614 392 544 414.386 544 442V570L0 570V442C0 414.386 22.3858 392 50 392L494 392Z" fill="#F7DF1E"/>
+            <path d="M2250 2091V2219C2250 2246.61 2227.61 2269 2200 2269L50 2269C22.3858 2269 0 2246.61 0 2219V2091L2250 2091Z" fill="#F7DF1E"/>
+            <path d="M366 570H544V1779H366V570Z" fill="#F7DF1E"/>
+            <g clip-path="url(#clip0)">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M409.043 1273.58L816.624 896H1038L597.703 1336.5L1038 1777L816.624 1777L409.043 1399.42C392.368 1382.73 383 1360.1 383 1336.5C383 1312.9 392.368 1290.27 409.043 1273.58Z" fill="#F7DF1E"/>
+            </g>
+            <defs>
+                <clipPath id="clip0">
+                    <rect width="1178" height="2356" fill="white" transform="matrix(-1 0 0 -1 1386 2356)"/>
+                </clipPath>
+            </defs>
+        </svg>
+    </a>
+
+    <!-- Desktop Nav -->
+    <nav class="hidden md:flex items-center gap-6 lg:gap-8">
+        <a href="#about"     class="text-white font-semibold text-sm lg:text-base nav-underline hover:text-yellow transition-colors">About me</a>
+        <a href="#portfolio" class="text-white font-semibold text-sm lg:text-base nav-underline hover:text-yellow transition-colors">Portfolio</a>
+        <a href="#contact"   class="bg-yellow text-black px-5 py-2 md:px-6 md:py-2.5 rounded-full font-bold text-xs md:text-sm uppercase tracking-wide transition-all hover:bg-white hover:scale-105 shadow-md">Contact Me</a>
+    </nav>
+
+    <!-- Mobile Hamburger -->
+    <button id="mobile-nav" class="md:hidden flex flex-col justify-center items-center w-10 h-10 z-[1001]" onclick="openMobileMenu()" aria-label="Open menu">
+        <span class="hamburger-bar"></span>
+        <span class="hamburger-bar"></span>
+        <span class="hamburger-bar"></span>
+    </button>
+</header>
+
+<!-- ══ Hero ══ -->
+<section class="grid grid-cols-1 lg:grid-cols-[55fr_45fr] min-h-screen">
+    <!-- Left -->
+    <div class="flex flex-col justify-center px-6 sm:px-10 md:px-14 lg:px-20 xl:px-28 pt-28 pb-16 lg:py-32 bg-white z-10">
+        <p class="text-navy text-lg sm:text-xl md:text-2xl font-medium mb-1">Hi, I am</p>
+        <h1 class="hero-name text-4xl sm:text-5xl md:text-6xl lg:text-5xl xl:text-6xl font-extrabold text-black leading-tight tracking-tighter mb-3">Kenneth Malinao</h1>
+        <p class="text-navy text-sm sm:text-base md:text-lg font-semibold mb-8 border-l-4 border-yellow pl-4">Front-end Developer / UI Designer</p>
+
+        <!-- Social Icons -->
+        <div class="flex gap-3 sm:gap-4">
+            <a href="#" class="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white shadow-md border border-gray-100 flex items-center justify-center transition-all hover:bg-yellow hover:-translate-y-1 hover:shadow-lg text-gray-700" aria-label="Email">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24">
+                    <path fill="currentColor" d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2m-.4 4.25l-7.07 4.42c-.32.2-.74.2-1.06 0L4.4 8.25a.85.85 0 1 1 .9-1.44L12 11l6.7-4.19a.85.85 0 1 1 .9 1.44"/>
+                </svg>
+            </a>
+            <a href="#" class="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white shadow-md border border-gray-100 flex items-center justify-center transition-all hover:bg-yellow hover:-translate-y-1 hover:shadow-lg text-gray-700" aria-label="Facebook">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24">
+                    <path fill="currentColor" d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95"/>
+                </svg>
+            </a>
+            <a href="#" class="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white shadow-md border border-gray-100 flex items-center justify-center transition-all hover:bg-yellow hover:-translate-y-1 hover:shadow-lg text-gray-700" aria-label="Instagram">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24">
+                    <path fill="currentColor" d="M13.028 2c1.125.003 1.696.009 2.189.023l.194.007c.224.008.445.018.712.03c1.064.05 1.79.218 2.427.465c.66.254 1.216.598 1.772 1.153a4.9 4.9 0 0 1 1.153 1.772c.247.637.415 1.363.465 2.428c.012.266.022.487.03.712l.006.194c.015.492.021 1.063.023 2.188l.001.746v1.31a79 79 0 0 1-.023 2.188l-.006.194c-.008.225-.018.446-.03.712c-.05 1.065-.22 1.79-.466 2.428a4.9 4.9 0 0 1-1.153 1.772a4.9 4.9 0 0 1-1.772 1.153c-.637.247-1.363.415-2.427.465l-.712.03l-.194.006c-.493.014-1.064.021-2.189.023l-.746.001h-1.309a78 78 0 0 1-2.189-.023l-.194-.006a63 63 0 0 1-.712-.031c-1.064-.05-1.79-.218-2.428-.465a4.9 4.9 0 0 1-1.771-1.153a4.9 4.9 0 0 1-1.154-1.772c-.247-.637-.415-1.363-.465-2.428l-.03-.712l-.005-.194A79 79 0 0 1 2 13.028v-2.056a79 79 0 0 1 .022-2.188l.007-.194c.008-.225.018-.446.03-.712c.05-1.065.218-1.79.465-2.428A4.9 4.9 0 0 1 3.68 3.678a4.9 4.9 0 0 1 1.77-1.153c.638-.247 1.363-.415 2.428-.465c.266-.012.488-.022.712-.03l.194-.006a79 79 0 0 1 2.188-.023zM12 7a5 5 0 1 0 0 10a5 5 0 0 0 0-10m0 2a3 3 0 1 1 .001 6a3 3 0 0 1 0-6m5.25-3.5a1.25 1.25 0 0 0 0 2.5a1.25 1.25 0 0 0 0-2.5"/>
+                </svg>
+            </a>
+        </div>
+    </div>
+
+    <!-- Right Navy Panel -->
+    <div class="relative bg-navy flex items-center justify-center hero-clip overflow-hidden min-h-[320px] sm:min-h-[420px] lg:min-h-0">
+        <div class="absolute inset-0 pointer-events-none opacity-60">
+            <svg class="absolute w-full h-full" viewBox="0 0 500 900" preserveAspectRatio="xMidYMid slice">
+                <g transform="skewX(15)" transform-origin="250 450">
+                    <rect x="150" y="250" width="38" height="400" rx="19" fill="#f8e71c"/>
+                    <rect x="231" y="234" width="38" height="432" rx="19" fill="#f8e71c" opacity="0.8" transform="rotate(-22 250 450)"/>
+                    <rect x="312" y="250" width="38" height="400" rx="19" fill="#f8e71c"/>
+                </g>
+            </svg>
+        </div>
+        <div class="relative z-10 animate-float">
+            <div class="w-52 h-52 sm:w-64 sm:h-64 md:w-80 md:h-80 lg:w-[320px] lg:h-[320px] xl:w-[360px] xl:h-[360px] rounded-full border-4 border-yellow/60 overflow-hidden shadow-2xl bg-white/5 flex items-center justify-center">
+                <img src="images/Portfolio.png" alt="Kenneth Malinao" class="w-full h-full object-cover brightness-105 contrast-105">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Blue Divider -->
+<div class="w-full h-1 bg-[#31379b]"></div>
+
+<!-- ══ About ══ -->
+<section id="about" class="relative px-5 sm:px-8 md:px-14 lg:px-20 py-16 md:py-24 bg-white overflow-hidden">
+    <div class="bg-decor bg-decor-right">ABOUT</div>
+
+    <div class="relative z-10 max-w-7xl mx-auto">
+        <div class="inline-flex items-center gap-3 mb-3">
+            <span class="w-8 h-0.5 bg-yellow rounded-full"></span>
+            <span class="text-xs font-bold tracking-[0.2em] uppercase text-navy">Who I Am</span>
+        </div>
+        <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold text-black mb-10">About Me</h2>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+            <div class="space-y-4 text-text-muted leading-relaxed text-sm sm:text-base">
+                <p>I'm <strong class="text-navy">Kenneth Malinao</strong>, a passionate Front-end Developer and UI Designer based in the Philippines. I craft clean, performant, and visually compelling digital experiences that bridge the gap between great design and solid engineering.</p>
+                <p>With a sharp eye for detail and a love for modern web aesthetics, I specialize in building responsive interfaces using HTML, CSS, JavaScript, and modern frameworks — making sure every pixel feels intentional and every interaction feels smooth.</p>
+                <p>When I'm not pushing pixels, I'm exploring new design systems, contributing to open-source projects, and leveling up my skills in UI motion and interactive storytelling.</p>
+            </div>
+
+            <!-- Stats -->
+            <div class="grid grid-cols-2 gap-4 sm:gap-5">
+                <div class="stat-card bg-navy rounded-2xl p-5 sm:p-6 text-center cursor-default">
+                    <div class="text-3xl sm:text-4xl font-extrabold text-yellow mb-2">3+</div>
+                    <div class="text-[11px] font-semibold uppercase tracking-wider text-white/70">Years Experience</div>
+                </div>
+                <div class="stat-card bg-navy rounded-2xl p-5 sm:p-6 text-center cursor-default">
+                    <div class="text-3xl sm:text-4xl font-extrabold text-yellow mb-2">20+</div>
+                    <div class="text-[11px] font-semibold uppercase tracking-wider text-white/70">Projects Done</div>
+                </div>
+                <div class="stat-card bg-navy rounded-2xl p-5 sm:p-6 text-center cursor-default">
+                    <div class="text-3xl sm:text-4xl font-extrabold text-yellow mb-2">15+</div>
+                    <div class="text-[11px] font-semibold uppercase tracking-wider text-white/70">Happy Clients</div>
+                </div>
+                <div class="stat-card bg-navy rounded-2xl p-5 sm:p-6 text-center cursor-default">
+                    <div class="text-3xl sm:text-4xl font-extrabold text-yellow mb-2">∞</div>
+                    <div class="text-[11px] font-semibold uppercase tracking-wider text-white/70">Lines of Code</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── Skills Marquee ── -->
+        <div class="mt-12 pt-8 border-t border-gray-100">
+            <div class="inline-flex items-center gap-3 mb-6">
+                <span class="w-8 h-0.5 bg-yellow rounded-full"></span>
+                <span class="text-xs font-bold tracking-[0.2em] uppercase text-navy">What I Use</span>
+                <span class="text-xs text-gray-400 italic ml-1">— hover to reveal icon</span>
+            </div>
+
+            <div class="marquee-wrapper py-2">
+                <div class="marquee-track">
+                    <!-- Set 1 -->
+                    <!-- HTML5 -->
+                    <div class="skill-chip">
+                        <span class="chip-text">HTML5</span>
+                        <span class="chip-icon">
+                            <svg viewBox="0 0 24 24" fill="#E34F26"><path d="M1.5 0h21l-1.91 21.563L11.977 24l-8.565-2.438L1.5 0zm7.031 9.75l-.232-2.718 10.059.003.23-2.622L5.412 4.41l.698 8.01h9.126l-.326 3.426-2.91.804-2.955-.81-.188-2.11H6.248l.33 4.171L12 19.351l5.379-1.443.744-8.157H8.531z"/></svg>
+                        </span>
+                    </div>
+                    <!-- CSS3 -->
+                    <div class="skill-chip">
+                        <span class="chip-text">CSS3</span>
+                        <span class="chip-icon">
+                            <svg viewBox="0 0 24 24" fill="#1572B6"><path d="M1.5 0h21l-1.91 21.563L11.977 24l-8.564-2.438L1.5 0zm17.09 4.413L5.41 4.41l.213 2.622 10.125.002-.255 2.716h-6.64l.24 2.573h6.182l-.366 3.523-2.91.804-2.956-.81-.188-2.11h-2.61l.29 3.855L12 19.288l5.373-1.53L18.59 4.414z"/></svg>
+                        </span>
+                    </div>
+                    <!-- JavaScript -->
+                    <div class="skill-chip">
+                        <span class="chip-text">JavaScript</span>
+                        <span class="chip-icon">
+                            <svg viewBox="0 0 24 24" fill="#F7DF1E"><path d="M0 0h24v24H0V0zm22.034 18.276c-.175-1.095-.888-2.015-3.003-2.873-.736-.345-1.554-.585-1.797-1.14-.091-.33-.105-.51-.046-.705.15-.646.915-.84 1.515-.66.39.12.75.42.976.9 1.034-.676 1.034-.676 1.755-1.125-.27-.42-.404-.601-.586-.78-.63-.705-1.469-1.065-2.834-1.034l-.705.089c-.676.165-1.32.525-1.71 1.005-1.14 1.291-.811 3.541.569 4.471 1.365 1.02 3.361 1.244 3.616 2.205.24 1.17-.87 1.545-1.966 1.41-.811-.18-1.26-.586-1.755-1.336l-1.83 1.051c.21.48.45.689.81 1.109 1.74 1.756 6.09 1.666 6.871-1.004.029-.09.24-.705.074-1.65l.046.067zm-8.983-7.245h-2.248c0 1.938-.009 3.864-.009 5.805 0 1.232.063 2.363-.138 2.711-.33.689-1.18.601-1.566.48-.396-.196-.597-.466-.83-.855-.063-.105-.11-.196-.127-.196l-1.825 1.125c.305.63.75 1.172 1.324 1.517.855.51 2.004.675 3.207.405.783-.226 1.458-.691 1.811-1.411.51-.93.402-2.07.397-3.346.012-2.054 0-4.109 0-6.179l.004-.056z"/></svg>
+                        </span>
+                    </div>
+                    <!-- React -->
+                    <div class="skill-chip">
+                        <span class="chip-text">React</span>
+                        <span class="chip-icon">
+                            <svg viewBox="0 0 24 24" fill="#61DAFB"><path d="M14.23 12.004a2.236 2.236 0 0 1-2.235 2.236 2.236 2.236 0 0 1-2.236-2.236 2.236 2.236 0 0 1 2.235-2.236 2.236 2.236 0 0 1 2.236 2.236zm2.648-10.69c-1.346 0-3.107.96-4.888 2.622-1.78-1.653-3.542-2.602-4.887-2.602-.41 0-.783.093-1.106.278-1.375.793-1.683 3.264-.973 6.365C1.98 8.917 0 10.42 0 12.004c0 1.59 1.99 3.097 5.043 4.03-.704 3.113-.39 5.588.988 6.38.32.187.69.275 1.102.275 1.345 0 3.107-.96 4.888-2.624 1.78 1.654 3.542 2.603 4.887 2.603.41 0 .783-.09 1.106-.275 1.374-.792 1.683-3.263.973-6.365C22.02 15.096 24 13.59 24 12.004c0-1.59-1.99-3.097-5.043-4.032.704-3.11.39-5.587-.988-6.38-.318-.184-.688-.277-1.092-.278zm-.005 1.09c.328 0 .607.077.89.236.93.535 1.266 2.497.96 5.07-.23-.05-.47-.1-.71-.142a51.54 51.54 0 0 0-1.72-.252A51.557 51.557 0 0 0 14.46 5.48a51.91 51.91 0 0 0-1.018-1.33c1.38-1.206 2.715-1.745 3.43-1.745zm-4.888 4.015a55.18 55.18 0 0 1 1.42 2.15 55.51 55.51 0 0 1-2.84 0c.44-.73.91-1.45 1.42-2.15zm-5.74.807c.328-.004.595.073.872.232.93.535 1.26 2.497.957 5.065-.235-.055-.465-.1-.705-.145a52.158 52.158 0 0 0-1.715-.25 51.53 51.53 0 0 0-1.565-2.042 51.69 51.69 0 0 0-1.02-1.33c1.38-1.206 2.714-1.747 3.176-1.53zm3.205 2.955c-.505.73-.985 1.47-1.415 2.215a55.51 55.51 0 0 1-2.84 0c.44-.73.905-1.45 1.415-2.215a55.51 55.51 0 0 1 2.84 0z"/></svg>
+                        </span>
+                    </div>
+                    <!-- Vue.js -->
+                    <div class="skill-chip">
+                        <span class="chip-text">Vue.js</span>
+                        <span class="chip-icon">
+                            <svg viewBox="0 0 24 24" fill="#4FC08D"><path d="M24 1.61h-9.94L12 5.16 9.94 1.61H0l12 20.78zM12 14.08L5.16 2.23h4.43L12 6.41l2.41-4.18h4.43z"/></svg>
+                        </span>
+                    </div>
+                    <!-- Tailwind -->
+                    <div class="skill-chip">
+                        <span class="chip-text">Tailwind CSS</span>
+                        <span class="chip-icon">
+                            <svg viewBox="0 0 24 24" fill="#06B6D4"><path d="M12.001 4.8c-3.2 0-5.2 1.6-6 4.8 1.2-1.6 2.6-2.2 4.2-1.8.913.228 1.565.89 2.288 1.624C13.666 10.618 15.027 12 18.001 12c3.2 0 5.2-1.6 6-4.8-1.2 1.6-2.6 2.2-4.2 1.8-.913-.228-1.565-.89-2.288-1.624C16.337 6.182 14.976 4.8 12.001 4.8zm-6 7.2c-3.2 0-5.2 1.6-6 4.8 1.2-1.6 2.6-2.2 4.2-1.8.913.228 1.565.89 2.288 1.624 1.177 1.194 2.538 2.576 5.512 2.576 3.2 0 5.2-1.6 6-4.8-1.2 1.6-2.6 2.2-4.2 1.8-.913-.228-1.565-.89-2.288-1.624C10.337 13.382 8.976 12 6.001 12z"/></svg>
+                        </span>
+                    </div>
+                    <!-- Figma -->
+                    <div class="skill-chip">
+                        <span class="chip-text">Figma</span>
+                        <span class="chip-icon">
+                            <svg viewBox="0 0 24 24"><path fill="#F24E1E" d="M8 24c2.208 0 4-1.792 4-4v-4H8c-2.208 0-4 1.792-4 4s1.792 4 4 4z"/><path fill="#FF7262" d="M4 12c0-2.208 1.792-4 4-4h4v8H8c-2.208 0-4-1.792-4-4z"/><path fill="#A259FF" d="M4 4c0-2.208 1.792-4 4-4h4v8H8C5.792 8 4 6.208 4 4z"/><path fill="#1ABCFE" d="M12 0h4c2.208 0 4 1.792 4 4s-1.792 4-4 4h-4V0z"/><path fill="#0ACF83" d="M20 12c0 2.208-1.792 4-4 4s-4-1.792-4-4 1.792-4 4-4 4 1.792 4 4z"/></svg>
+                        </span>
+                    </div>
+                    <!-- Adobe XD -->
+                    <div class="skill-chip">
+                        <span class="chip-text">Adobe XD</span>
+                        <span class="chip-icon">
+                            <svg viewBox="0 0 24 24" fill="#FF61F6"><path d="M13.966 22.624l-1.69-4.281H8.122l3.892-9.144 5.662 13.425zM8.884 1.376H0v21.248zm15.116 0h-8.884L24 22.624z"/></svg>
+                        </span>
+                    </div>
+                    <!-- Git -->
+                    <div class="skill-chip">
+                        <span class="chip-text">Git & GitHub</span>
+                        <span class="chip-icon">
+                            <svg viewBox="0 0 24 24" fill="#F05032"><path d="M23.546 10.93L13.067.452c-.604-.603-1.582-.603-2.188 0L8.708 2.627l2.76 2.76c.645-.215 1.379-.07 1.889.441.516.515.658 1.258.438 1.9l2.658 2.66c.645-.223 1.387-.078 1.9.435.721.72.721 1.884 0 2.604-.719.719-1.881.719-2.6 0-.539-.541-.674-1.337-.404-1.996L12.86 8.955v6.525c.176.086.342.203.488.348.713.721.713 1.883 0 2.6-.719.721-1.889.721-2.609 0-.719-.719-.719-1.879 0-2.598.182-.18.387-.316.605-.406V8.835c-.217-.091-.424-.222-.606-.401-.545-.545-.676-1.342-.396-2.009L7.636 3.7.45 10.881c-.6.605-.6 1.584 0 2.189l10.48 10.477c.604.604 1.582.604 2.186 0l10.43-10.43c.605-.603.605-1.582 0-2.187"/></svg>
+                        </span>
+                    </div>
+                    <!-- Node.js -->
+                    <div class="skill-chip">
+                        <span class="chip-text">Node.js</span>
+                        <span class="chip-icon">
+                            <svg viewBox="0 0 24 24" fill="#339933"><path d="M11.998 24c-.321 0-.641-.084-.922-.247l-2.936-1.737c-.438-.245-.224-.332-.08-.383.585-.203.703-.25 1.328-.605.065-.037.151-.023.218.017l2.256 1.339c.082.045.198.045.272 0l8.795-5.076c.082-.047.134-.141.134-.238V6.921c0-.099-.053-.19-.137-.242l-8.791-5.072c-.081-.047-.189-.047-.271 0L3.075 6.68c-.084.051-.139.145-.139.242v10.15c0 .097.055.189.137.236l2.408 1.392c1.307.654 2.108-.116 2.108-.891V7.787c0-.142.114-.253.256-.253h1.115c.139 0 .255.111.255.253v10.021c0 1.745-.95 2.745-2.604 2.745-.508 0-.909 0-2.026-.551L2.28 18.675c-.57-.329-.922-.943-.922-1.604V6.921c0-.661.352-1.275.922-1.603l8.795-5.082c.557-.315 1.296-.315 1.848 0l8.794 5.082c.570.328.924.942.924 1.603v10.15c0 .661-.354 1.275-.924 1.604l-8.794 5.076c-.282.164-.602.247-.925.247zm2.718-6.975c-3.855 0-4.663-1.771-4.663-3.255 0-.142.114-.253.256-.253h1.138c.127 0 .233.092.253.217.172 1.160.684 1.746 3.019 1.746 1.858 0 2.648-.421 2.648-1.408 0-.569-.225-.993-3.122-1.278-2.421-.24-3.920-.773-3.920-2.707 0-1.782 1.503-2.845 4.022-2.845 2.829 0 4.230.982 4.407 3.094.006.07-.018.139-.063.190-.046.049-.110.078-.178.078h-1.142c-.12 0-.228-.085-.251-.202-.275-1.225-.948-1.617-2.773-1.617-2.040 0-2.278.71-2.278 1.242 0 .645.281.834 3.026 1.197 2.717.361 4.010.871 4.010 2.780 0 1.924-1.603 3.025-4.397 3.025z"/></svg>
+                        </span>
+                    </div>
+                    <!-- GSAP -->
+                    <div class="skill-chip">
+                        <span class="chip-text">GSAP</span>
+                        <span class="chip-icon">
+                            <svg viewBox="0 0 24 24" fill="#88CE02"><path d="M7.895 17.487H5.012l-.65 2.126H2l3.117-9.204H7.46l3.117 9.204H8.146zm-.546-1.817-.946-3.087-.946 3.087zm5.898 3.943V10.409h2.29v9.204zm7.357.133c-1.156 0-2.065-.334-2.727-1.002-.662-.668-.993-1.57-.993-2.705 0-1.135.335-2.04 1.005-2.713.67-.674 1.565-1.011 2.687-1.011.896 0 1.636.212 2.22.636.583.424.941 1.009 1.073 1.753h-2.23c-.146-.527-.5-.79-1.063-.79-.462 0-.82.17-1.073.51-.253.34-.38.839-.38 1.498 0 .66.127 1.159.38 1.498.253.34.608.51 1.063.51.289 0 .536-.079.742-.238.206-.159.336-.383.39-.672h2.23c-.132.757-.493 1.349-1.083 1.776-.59.427-1.326.65-2.24.65z"/></svg>
+                        </span>
+                    </div>
+                    <!-- Responsive Design -->
+                    <div class="skill-chip">
+                        <span class="chip-text">Responsive Design</span>
+                        <span class="chip-icon">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 6h18V4H4c-1.1 0-2 .9-2 2v11H0v3h14v-3H4V6zm19 2h-6c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h6c.55 0 1-.45 1-1V9c0-.55-.45-1-1-1zm-1 9h-4v-7h4v7z"/></svg>
+                        </span>
+                    </div>
+
+                    <!-- Set 2 (duplicate for seamless loop) -->
+                    <div class="skill-chip">
+                        <span class="chip-text">HTML5</span>
+                        <span class="chip-icon"><svg viewBox="0 0 24 24" fill="#E34F26"><path d="M1.5 0h21l-1.91 21.563L11.977 24l-8.565-2.438L1.5 0zm7.031 9.75l-.232-2.718 10.059.003.23-2.622L5.412 4.41l.698 8.01h9.126l-.326 3.426-2.91.804-2.955-.81-.188-2.11H6.248l.33 4.171L12 19.351l5.379-1.443.744-8.157H8.531z"/></svg></span>
+                    </div>
+                    <div class="skill-chip">
+                        <span class="chip-text">CSS3</span>
+                        <span class="chip-icon"><svg viewBox="0 0 24 24" fill="#1572B6"><path d="M1.5 0h21l-1.91 21.563L11.977 24l-8.564-2.438L1.5 0zm17.09 4.413L5.41 4.41l.213 2.622 10.125.002-.255 2.716h-6.64l.24 2.573h6.182l-.366 3.523-2.91.804-2.956-.81-.188-2.11h-2.61l.29 3.855L12 19.288l5.373-1.53L18.59 4.414z"/></svg></span>
+                    </div>
+                    <div class="skill-chip">
+                        <span class="chip-text">JavaScript</span>
+                        <span class="chip-icon"><svg viewBox="0 0 24 24" fill="#F7DF1E"><path d="M0 0h24v24H0V0zm22.034 18.276c-.175-1.095-.888-2.015-3.003-2.873-.736-.345-1.554-.585-1.797-1.14-.091-.33-.105-.51-.046-.705.15-.646.915-.84 1.515-.66.39.12.75.42.976.9 1.034-.676 1.034-.676 1.755-1.125-.27-.42-.404-.601-.586-.78-.63-.705-1.469-1.065-2.834-1.034l-.705.089c-.676.165-1.32.525-1.71 1.005-1.14 1.291-.811 3.541.569 4.471 1.365 1.02 3.361 1.244 3.616 2.205.24 1.17-.87 1.545-1.966 1.41-.811-.18-1.26-.586-1.755-1.336l-1.83 1.051c.21.48.45.689.81 1.109 1.74 1.756 6.09 1.666 6.871-1.004.029-.09.24-.705.074-1.65l.046.067zm-8.983-7.245h-2.248c0 1.938-.009 3.864-.009 5.805 0 1.232.063 2.363-.138 2.711-.33.689-1.18.601-1.566.48-.396-.196-.597-.466-.83-.855-.063-.105-.11-.196-.127-.196l-1.825 1.125c.305.63.75 1.172 1.324 1.517.855.51 2.004.675 3.207.405.783-.226 1.458-.691 1.811-1.411.51-.93.402-2.07.397-3.346.012-2.054 0-4.109 0-6.179l.004-.056z"/></svg></span>
+                    </div>
+                    <div class="skill-chip">
+                        <span class="chip-text">React</span>
+                        <span class="chip-icon"><svg viewBox="0 0 24 24" fill="#61DAFB"><path d="M14.23 12.004a2.236 2.236 0 0 1-2.235 2.236 2.236 2.236 0 0 1-2.236-2.236 2.236 2.236 0 0 1 2.235-2.236 2.236 2.236 0 0 1 2.236 2.236zm2.648-10.69c-1.346 0-3.107.96-4.888 2.622-1.78-1.653-3.542-2.602-4.887-2.602-.41 0-.783.093-1.106.278-1.375.793-1.683 3.264-.973 6.365C1.98 8.917 0 10.42 0 12.004c0 1.59 1.99 3.097 5.043 4.03-.704 3.113-.39 5.588.988 6.38.32.187.69.275 1.102.275 1.345 0 3.107-.96 4.888-2.624 1.78 1.654 3.542 2.603 4.887 2.603.41 0 .783-.09 1.106-.275 1.374-.792 1.683-3.263.973-6.365C22.02 15.096 24 13.59 24 12.004c0-1.59-1.99-3.097-5.043-4.032.704-3.11.39-5.587-.988-6.38-.318-.184-.688-.277-1.092-.278zm-.005 1.09c.328 0 .607.077.89.236.93.535 1.266 2.497.96 5.07-.23-.05-.47-.1-.71-.142a51.54 51.54 0 0 0-1.72-.252A51.557 51.557 0 0 0 14.46 5.48a51.91 51.91 0 0 0-1.018-1.33c1.38-1.206 2.715-1.745 3.43-1.745zm-4.888 4.015a55.18 55.18 0 0 1 1.42 2.15 55.51 55.51 0 0 1-2.84 0c.44-.73.91-1.45 1.42-2.15zm-5.74.807c.328-.004.595.073.872.232.93.535 1.26 2.497.957 5.065-.235-.055-.465-.1-.705-.145a52.158 52.158 0 0 0-1.715-.25 51.53 51.53 0 0 0-1.565-2.042 51.69 51.69 0 0 0-1.02-1.33c1.38-1.206 2.714-1.747 3.176-1.53zm3.205 2.955c-.505.73-.985 1.47-1.415 2.215a55.51 55.51 0 0 1-2.84 0c.44-.73.905-1.45 1.415-2.215a55.51 55.51 0 0 1 2.84 0z"/></svg></span>
+                    </div>
+                    <div class="skill-chip">
+                        <span class="chip-text">Vue.js</span>
+                        <span class="chip-icon"><svg viewBox="0 0 24 24" fill="#4FC08D"><path d="M24 1.61h-9.94L12 5.16 9.94 1.61H0l12 20.78zM12 14.08L5.16 2.23h4.43L12 6.41l2.41-4.18h4.43z"/></svg></span>
+                    </div>
+                    <div class="skill-chip">
+                        <span class="chip-text">Tailwind CSS</span>
+                        <span class="chip-icon"><svg viewBox="0 0 24 24" fill="#06B6D4"><path d="M12.001 4.8c-3.2 0-5.2 1.6-6 4.8 1.2-1.6 2.6-2.2 4.2-1.8.913.228 1.565.89 2.288 1.624C13.666 10.618 15.027 12 18.001 12c3.2 0 5.2-1.6 6-4.8-1.2 1.6-2.6 2.2-4.2 1.8-.913-.228-1.565-.89-2.288-1.624C16.337 6.182 14.976 4.8 12.001 4.8zm-6 7.2c-3.2 0-5.2 1.6-6 4.8 1.2-1.6 2.6-2.2 4.2-1.8.913.228 1.565.89 2.288 1.624 1.177 1.194 2.538 2.576 5.512 2.576 3.2 0 5.2-1.6 6-4.8-1.2 1.6-2.6 2.2-4.2 1.8-.913-.228-1.565-.89-2.288-1.624C10.337 13.382 8.976 12 6.001 12z"/></svg></span>
+                    </div>
+                    <div class="skill-chip">
+                        <span class="chip-text">Figma</span>
+                        <span class="chip-icon"><svg viewBox="0 0 24 24"><path fill="#F24E1E" d="M8 24c2.208 0 4-1.792 4-4v-4H8c-2.208 0-4 1.792-4 4s1.792 4 4 4z"/><path fill="#FF7262" d="M4 12c0-2.208 1.792-4 4-4h4v8H8c-2.208 0-4-1.792-4-4z"/><path fill="#A259FF" d="M4 4c0-2.208 1.792-4 4-4h4v8H8C5.792 8 4 6.208 4 4z"/><path fill="#1ABCFE" d="M12 0h4c2.208 0 4 1.792 4 4s-1.792 4-4 4h-4V0z"/><path fill="#0ACF83" d="M20 12c0 2.208-1.792 4-4 4s-4-1.792-4-4 1.792-4 4-4 4 1.792 4 4z"/></svg></span>
+                    </div>
+                    <div class="skill-chip">
+                        <span class="chip-text">Adobe XD</span>
+                        <span class="chip-icon"><svg viewBox="0 0 24 24" fill="#FF61F6"><path d="M13.966 22.624l-1.69-4.281H8.122l3.892-9.144 5.662 13.425zM8.884 1.376H0v21.248zm15.116 0h-8.884L24 22.624z"/></svg></span>
+                    </div>
+                    <div class="skill-chip">
+                        <span class="chip-text">Git & GitHub</span>
+                        <span class="chip-icon"><svg viewBox="0 0 24 24" fill="#F05032"><path d="M23.546 10.93L13.067.452c-.604-.603-1.582-.603-2.188 0L8.708 2.627l2.76 2.76c.645-.215 1.379-.07 1.889.441.516.515.658 1.258.438 1.9l2.658 2.66c.645-.223 1.387-.078 1.9.435.721.72.721 1.884 0 2.604-.719.719-1.881.719-2.6 0-.539-.541-.674-1.337-.404-1.996L12.86 8.955v6.525c.176.086.342.203.488.348.713.721.713 1.883 0 2.6-.719.721-1.889.721-2.609 0-.719-.719-.719-1.879 0-2.598.182-.18.387-.316.605-.406V8.835c-.217-.091-.424-.222-.606-.401-.545-.545-.676-1.342-.396-2.009L7.636 3.7.45 10.881c-.6.605-.6 1.584 0 2.189l10.48 10.477c.604.604 1.582.604 2.186 0l10.43-10.43c.605-.603.605-1.582 0-2.187"/></svg></span>
+                    </div>
+                    <div class="skill-chip">
+                        <span class="chip-text">Node.js</span>
+                        <span class="chip-icon"><svg viewBox="0 0 24 24" fill="#339933"><path d="M11.998 24c-.321 0-.641-.084-.922-.247l-2.936-1.737c-.438-.245-.224-.332-.08-.383.585-.203.703-.25 1.328-.605.065-.037.151-.023.218.017l2.256 1.339c.082.045.198.045.272 0l8.795-5.076c.082-.047.134-.141.134-.238V6.921c0-.099-.053-.19-.137-.242l-8.791-5.072c-.081-.047-.189-.047-.271 0L3.075 6.68c-.084.051-.139.145-.139.242v10.15c0 .097.055.189.137.236l2.408 1.392c1.307.654 2.108-.116 2.108-.891V7.787c0-.142.114-.253.256-.253h1.115c.139 0 .255.111.255.253v10.021c0 1.745-.95 2.745-2.604 2.745-.508 0-.909 0-2.026-.551L2.28 18.675c-.57-.329-.922-.943-.922-1.604V6.921c0-.661.352-1.275.922-1.603l8.795-5.082c.557-.315 1.296-.315 1.848 0l8.794 5.082c.570.328.924.942.924 1.603v10.15c0 .661-.354 1.275-.924 1.604l-8.794 5.076c-.282.164-.602.247-.925.247zm2.718-6.975c-3.855 0-4.663-1.771-4.663-3.255 0-.142.114-.253.256-.253h1.138c.127 0 .233.092.253.217.172 1.160.684 1.746 3.019 1.746 1.858 0 2.648-.421 2.648-1.408 0-.569-.225-.993-3.122-1.278-2.421-.24-3.920-.773-3.920-2.707 0-1.782 1.503-2.845 4.022-2.845 2.829 0 4.230.982 4.407 3.094.006.07-.018.139-.063.190-.046.049-.110.078-.178.078h-1.142c-.12 0-.228-.085-.251-.202-.275-1.225-.948-1.617-2.773-1.617-2.040 0-2.278.71-2.278 1.242 0 .645.281.834 3.026 1.197 2.717.361 4.010.871 4.010 2.780 0 1.924-1.603 3.025-4.397 3.025z"/></svg></span>
+                    </div>
+                    <div class="skill-chip">
+                        <span class="chip-text">GSAP</span>
+                        <span class="chip-icon"><svg viewBox="0 0 24 24" fill="#88CE02"><path d="M7.895 17.487H5.012l-.65 2.126H2l3.117-9.204H7.46l3.117 9.204H8.146zm-.546-1.817-.946-3.087-.946 3.087zm5.898 3.943V10.409h2.29v9.204zm7.357.133c-1.156 0-2.065-.334-2.727-1.002-.662-.668-.993-1.57-.993-2.705 0-1.135.335-2.04 1.005-2.713.67-.674 1.565-1.011 2.687-1.011.896 0 1.636.212 2.22.636.583.424.941 1.009 1.073 1.753h-2.23c-.146-.527-.5-.79-1.063-.79-.462 0-.82.17-1.073.51-.253.34-.38.839-.38 1.498 0 .66.127 1.159.38 1.498.253.34.608.51 1.063.51.289 0 .536-.079.742-.238.206-.159.336-.383.39-.672h2.23c-.132.757-.493 1.349-1.083 1.776-.59.427-1.326.65-2.24.65z"/></svg></span>
+                    </div>
+                    <div class="skill-chip">
+                        <span class="chip-text">Responsive Design</span>
+                        <span class="chip-icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 6h18V4H4c-1.1 0-2 .9-2 2v11H0v3h14v-3H4V6zm19 2h-6c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h6c.55 0 1-.45 1-1V9c0-.55-.45-1-1-1zm-1 9h-4v-7h4v7z"/></svg></span>
+                    </div>
+                </div><!-- /marquee-track -->
+            </div><!-- /marquee-wrapper -->
+        </div>
+    </div>
+</section>
+
+<!-- Blue Divider -->
+<div class="w-full h-1 bg-[#31379b]"></div>
+
+<!-- ══ Portfolio ══ -->
+<section id="portfolio" class="relative px-5 sm:px-8 md:px-14 lg:px-20 py-16 md:py-24 bg-gray-light overflow-hidden">
+    <div class="bg-decor bg-decor-left">WORK</div>
+
+    <div class="relative z-10 max-w-7xl mx-auto">
+        <div class="flex flex-wrap justify-between items-end gap-4 mb-10 md:mb-12">
+            <div>
+                <div class="inline-flex items-center gap-3 mb-3">
+                    <span class="w-8 h-0.5 bg-yellow rounded-full"></span>
+                    <span class="text-xs font-bold tracking-[0.2em] uppercase text-navy">My Work</span>
+                </div>
+                <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold text-black">Selected Projects</h2>
+            </div>
+            <a href="#" class="text-sm font-bold text-navy border-b-2 border-yellow pb-1 hover:text-yellow transition-colors">View All →</a>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+            <!-- Featured -->
+            <div class="port-card sm:col-span-2 bg-white rounded-3xl overflow-hidden shadow-card cursor-pointer group">
+                <div class="relative bg-navy h-52 sm:h-64 overflow-hidden flex items-center justify-center">
+                    <div class="card-img absolute inset-0 flex items-center justify-center opacity-50">
+                        <div class="w-28 h-28 border-2 border-yellow/30 rounded-full absolute"></div>
+                        <div class="w-40 h-2 bg-yellow/20 rounded-full rotate-12 absolute"></div>
+                    </div>
+                    <span class="font-marker text-white/80 z-10 bg-black/30 px-4 py-1 rounded-full backdrop-blur-sm text-sm sm:text-base">E-Commerce Platform</span>
+                </div>
+                <div class="p-5 sm:p-6">
+                    <div class="flex gap-2 mb-3 flex-wrap">
+                        <span class="text-[10px] sm:text-[11px] font-bold uppercase px-3 py-1 bg-yellow rounded-full text-black">React</span>
+                        <span class="text-[10px] sm:text-[11px] font-bold uppercase px-3 py-1 bg-navy rounded-full text-white">Tailwind</span>
+                        <span class="text-[10px] sm:text-[11px] font-bold uppercase px-3 py-1 bg-navy rounded-full text-white">Node.js</span>
+                    </div>
+                    <h3 class="text-lg sm:text-xl font-bold mb-2">ShopVerse — Modern E-Commerce UI</h3>
+                    <p class="text-text-muted text-sm mb-4 leading-relaxed">Full-featured e-commerce storefront with dynamic product filtering, cart management, and a seamless checkout experience.</p>
+                    <a href="#" class="inline-flex items-center gap-2 text-sm font-bold text-navy hover:gap-3 transition-all">View Case Study <span>→</span></a>
+                </div>
+            </div>
+
+            <!-- Project 2 -->
+            <div class="port-card bg-white rounded-3xl overflow-hidden shadow-card cursor-pointer group">
+                <div class="relative bg-[#1a1a2e] h-48 sm:h-56 overflow-hidden flex items-center justify-center">
+                    <div class="card-img absolute inset-0 flex items-center justify-center opacity-40">
+                        <div class="w-24 h-24 border-2 border-yellow/30 rounded-full absolute rotate-12"></div>
+                    </div>
+                    <span class="font-marker text-white/80 z-10 bg-black/30 px-4 py-1 rounded-full backdrop-blur-sm text-sm">Dashboard UI</span>
+                </div>
+                <div class="p-5">
+                    <div class="flex gap-2 mb-3">
+                        <span class="text-[10px] font-bold uppercase px-3 py-1 bg-yellow rounded-full text-black">Vue.js</span>
+                        <span class="text-[10px] font-bold uppercase px-3 py-1 bg-navy rounded-full text-white">Chart.js</span>
+                    </div>
+                    <h3 class="text-base sm:text-lg font-bold mb-1">Analytics Dashboard</h3>
+                    <p class="text-text-muted text-sm mb-4">Real-time data dashboard with interactive charts and dark mode toggle.</p>
+                    <a href="#" class="inline-flex items-center gap-2 text-sm font-bold text-navy hover:gap-3 transition-all">View Project →</a>
+                </div>
+            </div>
+
+            <!-- Project 3 -->
+            <div class="port-card bg-white rounded-3xl overflow-hidden shadow-card cursor-pointer group">
+                <div class="relative bg-[#16213e] h-48 sm:h-56 overflow-hidden flex items-center justify-center">
+                    <div class="card-img absolute inset-0 flex items-center justify-center opacity-40">
+                        <div class="w-28 h-28 border-2 border-yellow/30 rounded-full absolute"></div>
+                    </div>
+                    <span class="font-marker text-white/80 z-10 bg-black/30 px-4 py-1 rounded-full backdrop-blur-sm text-sm">Portfolio Design</span>
+                </div>
+                <div class="p-5">
+                    <div class="flex gap-2 mb-3">
+                        <span class="text-[10px] font-bold uppercase px-3 py-1 bg-yellow rounded-full text-black">HTML/CSS</span>
+                        <span class="text-[10px] font-bold uppercase px-3 py-1 bg-navy rounded-full text-white">Figma</span>
+                    </div>
+                    <h3 class="text-base sm:text-lg font-bold mb-1">Personal Portfolio Redesign</h3>
+                    <p class="text-text-muted text-sm mb-4">Bold split-layout concept with motion effects and strong typography.</p>
+                    <a href="#" class="inline-flex items-center gap-2 text-sm font-bold text-navy hover:gap-3 transition-all">View Project →</a>
+                </div>
+            </div>
+
+            <!-- Project 4 -->
+            <div class="port-card bg-white rounded-3xl overflow-hidden shadow-card cursor-pointer group">
+                <div class="relative bg-[#0d1b2a] h-48 sm:h-56 overflow-hidden flex items-center justify-center">
+                    <div class="card-img absolute inset-0 flex items-center justify-center opacity-40">
+                        <div class="w-32 h-32 border-2 border-yellow/30 rounded-full absolute"></div>
+                    </div>
+                    <span class="font-marker text-white/80 z-10 bg-black/30 px-4 py-1 rounded-full backdrop-blur-sm text-sm">Landing Page</span>
+                </div>
+                <div class="p-5">
+                    <div class="flex gap-2 mb-3">
+                        <span class="text-[10px] font-bold uppercase px-3 py-1 bg-yellow rounded-full text-black">React</span>
+                        <span class="text-[10px] font-bold uppercase px-3 py-1 bg-navy rounded-full text-white">GSAP</span>
+                    </div>
+                    <h3 class="text-base sm:text-lg font-bold mb-1">SaaS Landing Page</h3>
+                    <p class="text-text-muted text-sm mb-4">High-converting landing page with scroll-triggered animations and CTA design.</p>
+                    <a href="#" class="inline-flex items-center gap-2 text-sm font-bold text-navy hover:gap-3 transition-all">View Project →</a>
+                </div>
+            </div>
+
+            <!-- Project 5 -->
+            <div class="port-card bg-white rounded-3xl overflow-hidden shadow-card cursor-pointer group">
+                <div class="relative bg-[#0f2027] h-48 sm:h-56 overflow-hidden flex items-center justify-center">
+                    <div class="card-img absolute inset-0 flex items-center justify-center opacity-40">
+                        <div class="w-28 h-28 border-2 border-yellow/30 rounded-full absolute"></div>
+                    </div>
+                    <span class="font-marker text-white/80 z-10 bg-black/30 px-4 py-1 rounded-full backdrop-blur-sm text-sm">Mobile App UI</span>
+                </div>
+                <div class="p-5">
+                    <div class="flex gap-2 mb-3">
+                        <span class="text-[10px] font-bold uppercase px-3 py-1 bg-yellow rounded-full text-black">Figma</span>
+                        <span class="text-[10px] font-bold uppercase px-3 py-1 bg-navy rounded-full text-white">Prototyping</span>
+                    </div>
+                    <h3 class="text-base sm:text-lg font-bold mb-1">Fitness Tracker App UI</h3>
+                    <p class="text-text-muted text-sm mb-4">Clean mobile UI featuring progress visualizations and gamified streaks.</p>
+                    <a href="#" class="inline-flex items-center gap-2 text-sm font-bold text-navy hover:gap-3 transition-all">View Case Study →</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ══ Footer / Contact ══ -->
+<footer id="contact" class="relative bg-navy text-white">
+    <div class="relative z-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[1.5fr_0.8fr_1.4fr] gap-8 px-5 sm:px-10 md:px-14 lg:px-20 py-12 md:py-16 border-b border-white/10">
+        <!-- Brand -->
+        <div>
+            <a href="#" class="font-marker text-xl sm:text-2xl text-yellow inline-block mb-4">KENNETH M.</a>
+            <p class="text-white/60 text-sm leading-relaxed max-w-xs">Building polished digital experiences, one component at a time. Open to freelance projects and full-time roles.</p>
+            <div class="flex gap-3 mt-6">
+                <a href="#" class="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center transition-all hover:bg-yellow hover:border-yellow hover:-translate-y-1 group">
+                    <svg class="w-4 h-4 fill-white/70 group-hover:fill-navy transition-colors" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10h5v-2h-5c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8v1.43c0 .79-.64 1.43-1.43 1.43-.43 0-.82-.19-1.1-.51-.95.84-2.21 1.34-3.59 1.34-2.98 0-5.4-2.42-5.4-5.4s2.42-5.4 5.4-5.4c1.38 0 2.64.5 3.59 1.34.18-.21.44-.34.74-.34.83 0 1.5.67 1.5 1.5V12c0 2.21 1.79 4 4 4s4-1.79 4-4-1.79-10-10-10z"/></svg>
+                </a>
+                <a href="#" class="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center transition-all hover:bg-yellow hover:border-yellow hover:-translate-y-1 group">
+                    <svg class="w-4 h-4 fill-white/70 group-hover:fill-navy transition-colors" viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+                </a>
+                <a href="#" class="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center transition-all hover:bg-yellow hover:border-yellow hover:-translate-y-1 group">
+                    <svg class="w-4 h-4 fill-white/70 group-hover:fill-navy transition-colors" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 23.2 23.227 23.2 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                </a>
+            </div>
+        </div>
+
+        <!-- Quick Links -->
+        <div>
+            <h4 class="text-yellow text-xs font-bold uppercase tracking-wider mb-5">Quick Links</h4>
+            <ul class="space-y-3">
+                <li><a href="#" class="text-white/50 text-sm hover:text-yellow transition-colors">Home</a></li>
+                <li><a href="#about" class="text-white/50 text-sm hover:text-yellow transition-colors">About Me</a></li>
+                <li><a href="#portfolio" class="text-white/50 text-sm hover:text-yellow transition-colors">Portfolio</a></li>
+                <li><a href="#contact" class="text-white/50 text-sm hover:text-yellow transition-colors">Contact</a></li>
+            </ul>
+        </div>
+
+        <!-- Contact Form -->
+        <div class="sm:col-span-2 lg:col-span-1">
+            <h4 class="text-yellow text-xs font-bold uppercase tracking-wider mb-5">Get In Touch</h4>
+            <div class="space-y-3">
+                <input type="text" placeholder="Your Name" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder:text-white/40 focus:border-yellow focus:outline-none transition-colors">
+                <input type="email" placeholder="Your Email" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder:text-white/40 focus:border-yellow focus:outline-none transition-colors">
+                <textarea rows="3" placeholder="Your Message" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder:text-white/40 focus:border-yellow focus:outline-none transition-colors resize-none"></textarea>
+                <button id="send-btn" class="bg-yellow text-black px-6 py-3 rounded-full font-bold text-sm uppercase tracking-wide transition-all hover:bg-white hover:scale-105">Send Message</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer Bottom -->
+    <div class="bg-[#070a2e] px-5 md:px-14 lg:px-20 py-4 flex flex-col sm:flex-row justify-between items-center gap-2">
+        <p class="text-white/30 text-xs text-center sm:text-left">© 2026 <span class="text-yellow">Kenneth Malinao</span>. All rights reserved.</p>
+        <p class="text-white/30 text-xs">Designed & Built with ♥ by Kenneth</p>
+    </div>
+</footer>
+
+<script>
+    // ── Navbar scroll ──
+    const header = document.getElementById('main-header');
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 60) {
+            header.style.cssText = 'background:rgba(11,15,67,0.95);backdrop-filter:blur(12px);padding-top:0.75rem;padding-bottom:0.75rem;box-shadow:0 4px 20px rgba(0,0,0,0.2);';
+        } else {
+            header.style.cssText = '';
+        }
+    });
+
+    // ── Mobile menu ──
+    function openMobileMenu() {
+        document.getElementById('mobile-menu').classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+    function closeMobileMenu() {
+        document.getElementById('mobile-menu').classList.remove('active');
+        document.body.style.overflow = '';
+    }
+    document.getElementById('close-menu').onclick = closeMobileMenu;
+
+    // ── Contact form ──
+    document.getElementById('send-btn').addEventListener('click', (e) => {
+        e.preventDefault();
+        const btn = e.currentTarget;
+        btn.textContent = '✓ Message Sent!';
+        btn.style.background = '#4ade80';
+        setTimeout(() => {
+            btn.textContent = 'Send Message';
+            btn.style.background = '';
+        }, 3000);
+    });
+</script>
+</body>
+</html>
