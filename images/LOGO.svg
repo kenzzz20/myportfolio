@@ -1,18 +1,9 @@
-<svg width="2293" height="2356" viewBox="0 0 2293 2356" fill="none" xmlns="http://www.w3.org/2000/svg">
-<rect y="570" width="178" height="1521" fill="#F7DF1E"/>
-<rect x="1286" y="975" width="178" height="805" fill="#F7DF1E"/>
-<rect x="2072" y="976" width="178" height="1115" fill="#F7DF1E"/>
-<path d="M2047.5 976L2250 976L1893 1781.37L1699 1781.37L2047.5 976Z" fill="#F7DF1E"/>
-<path d="M1286 975.099L1488.96 975.098L1890 1781.37L1699 1781.37L1286 975.099Z" fill="#F7DF1E"/>
-<path d="M494 392C521.614 392 544 414.386 544 442V570L0 570V442C0 414.386 22.3858 392 50 392L494 392Z" fill="#F7DF1E"/>
-<path d="M2250 2091V2219C2250 2246.61 2227.61 2269 2200 2269L50 2269C22.3858 2269 0 2246.61 0 2219V2091L2250 2091Z" fill="#F7DF1E"/>
-<path d="M366 570H544V1779H366V570Z" fill="#F7DF1E"/>
-<g clip-path="url(#clip0_83_54)">
-<path fill-rule="evenodd" clip-rule="evenodd" d="M409.043 1273.58L816.624 896H1038L597.703 1336.5L1038 1777L816.624 1777L409.043 1399.42C392.368 1382.73 383 1360.1 383 1336.5C383 1312.9 392.368 1290.27 409.043 1273.58Z" fill="#F7DF1E"/>
-</g>
-<defs>
-<clipPath id="clip0_83_54">
-<rect width="1178" height="2356" fill="white" transform="matrix(-1 0 0 -1 1386 2356)"/>
-</clipPath>
-</defs>
+<svg width="2213" height="1362" viewBox="0 0 2213 1362" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0H178V1184H0V0Z" fill="#F7DF1E"/>
+<rect x="1516.24" y="1058.5" width="178" height="519.244" transform="rotate(-89.9365 1516.24 1058.5)" fill="#F7DF1E"/>
+<path d="M839 177V0L2036 0V177L839 177Z" fill="#F7DF1E"/>
+<path d="M2213 1184V1362L0 1362V1184L2213 1184Z" fill="#F7DF1E"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M137.043 554.584L544.624 177H766L325.703 617.5L766 1058L544.624 1058L137.043 680.416C120.368 663.728 111 641.097 111 617.5C111 593.903 120.368 571.272 137.043 554.584Z" fill="#F7DF1E"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M1466.96 680.416L1059.38 1058H838L1278.3 617.5L838 177L1059.38 177L1466.96 554.584C1483.63 571.272 1493 593.903 1493 617.5C1493 641.097 1483.63 663.728 1466.96 680.416Z" fill="#F7DF1E"/>
+<path d="M2035 0H2213V1184H2035V0Z" fill="#F7DF1E"/>
 </svg>
